@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -9,6 +10,8 @@ public class CellGrid : MonoBehaviour
     [SerializeField] private int row;
     [SerializeField] private int column;
     [SerializeField] private bool isInitialized = false;
+
+    [SerializeField] private TMP_Text markLabel; // assign in prefab, or auto-found below
 
     public enum CurrentStatus
     {
@@ -45,6 +48,9 @@ public class CellGrid : MonoBehaviour
     private void Awake()
     {
         GetComponent<Button>().onClick.AddListener(OnGridSelected);
+
+        if (markLabel == null)
+            markLabel = GetComponentInChildren<TMP_Text>();
     }
 
     private void OnGridSelected()
@@ -52,6 +58,17 @@ public class CellGrid : MonoBehaviour
         if (status != CurrentStatus.Empty) return;
         Debug.Log($"The Grid is selcted: <color=yellow> ({this.row}, {this.column})</color>");
         GridEvents.RaiseCellClicked(this);
+    }
+
+    /// <summary>Called externally (by TurnManager) once a move is accepted.</summary>
+    public void SetMark(CurrentStatus mark)
+    {
+        status = mark;
+
+        if (markLabel != null)
+            markLabel.text = mark == CurrentStatus.Empty ? "" : mark.ToString();
+        else
+            Debug.LogWarning($"CellGrid ({row},{column}): no TMP_Text found to display mark.");
     }
 
     private void OnDestroy()
