@@ -12,7 +12,7 @@ public static class GridEvents
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void ResetOnBoot()
     {
-        Debug.Log($"All Listeners Cleared.");
+       Debug.Log($"All Grid Events Listeners Cleared.");
        ClearAllListeners();
     }
 }
