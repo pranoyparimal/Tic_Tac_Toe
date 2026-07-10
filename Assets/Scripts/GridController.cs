@@ -18,25 +18,32 @@ public class GridController : MonoBehaviour
     public int Rows => rows;
     public int Columns => columns;
 
-    private readonly Dictionary<(int, int), CellGrid> cells_grids = new();
+    private readonly Dictionary<(int, int), ICell> cells_grids = new();
 
     public bool IsGameOver { get; private set; }
+
+    private void Awake()
+    {
+        // Rebuild dictionary for runtime since Dictionary doesn't serialize
+        var childCells = GetComponentsInChildren<ICell>(true);
+        foreach (var cell in childCells)
+        {
+            cells_grids[(cell.Row, cell.Column)] = cell;
+        }
+    }
 
     //private readonly Dictionary<string, GameObject> cellObjectsById = new();
 
     /// <summary>Event Fired when a grid is selected on the board /// </summary>
-    public event Action<CellGrid> OnCellSelected; // re-broadcast for TurnManager, ScoreTracker, etc.
+    public event Action<ICell> OnCellSelected; // re-broadcast for TurnManager, ScoreTracker, etc.
     /// <summary>Event Fired when a player wins the game  /// </summary>
-    public event Action<CellGrid.CurrentStatus> OnGameWon;
+    public event Action<CurrentStatus> OnGameWon;
     /// <summary>Event fired when the game is drawn & no player wins the game  /// </summary>
     public event Action OnGameDraw;
 
     /// <summary>Fired when the grid is cleared back to all-Empty (restart flow).</summary>
     public event Action OnGridReset;
 
-    private void OnEnable() => GridEvents.CellClicked += HandleCellClicked;
-
-    private void OnDisable() => GridEvents.CellClicked -= HandleCellClicked;
 
     /// <summary>
     /// Allocates fresh cell data for an NxN (or NxM) grid. Call this once
@@ -55,7 +62,7 @@ public class GridController : MonoBehaviour
     {
         string id = GetCellId(row, col);
 
-        CellGrid grid = cellObject.GetComponent<CellGrid>();
+        ICell grid = cellObject.GetComponent<ICell>();
         if (cellObject != null && grid != null)
         {
             cells_grids[(row, col)] = grid;
@@ -76,29 +83,30 @@ public class GridController : MonoBehaviour
         CheckWinLogic(grid);
     }*/
 
-    private void HandleCellClicked(CellGrid cell)
+    public void HandleMarkPlaced(int row, int col, CurrentStatus mark)
     {
         if (IsGameOver) return;
-        if (!cells_grids.ContainsValue(cell)) return;
+        if (!cells_grids.TryGetValue((row, col), out var cell)) return;
 
+        cell.SetMark(mark);
         OnCellSelected?.Invoke(cell);
         CheckWinCondition();
     }
 
     public void CheckWinCondition()
     {
-        CellGrid.CurrentStatus GetStatus(int r, int c)
+        CurrentStatus GetStatus(int r, int c)
         {
             if (cells_grids.TryGetValue((r, c), out var cell))
                 return cell.Status;
-            return CellGrid.CurrentStatus.Empty;
+            return CurrentStatus.Empty;
         }
 
         // Check rows
         for (int r = 0; r < rows; r++)
         {
             var first = GetStatus(r, 0);
-            if (first == CellGrid.CurrentStatus.Empty) continue;
+            if (first == CurrentStatus.Empty) continue;
 
             bool win = true;
             for (int c = 1; c < columns; c++)
@@ -121,7 +129,7 @@ public class GridController : MonoBehaviour
         for (int c = 0; c < columns; c++)
         {
             var first = GetStatus(0, c);
-            if (first == CellGrid.CurrentStatus.Empty) continue;
+            if (first == CurrentStatus.Empty) continue;
 
             bool win = true;
             for (int r = 1; r < rows; r++)
@@ -146,7 +154,7 @@ public class GridController : MonoBehaviour
         {
             // Diagonal 1 (Top-Left to Bottom-Right)
             var firstDiag1 = GetStatus(0, 0);
-            if (firstDiag1 != CellGrid.CurrentStatus.Empty)
+            if (firstDiag1 != CurrentStatus.Empty)
             {
                 bool win = true;
                 for (int i = 1; i < minDim; i++)
@@ -167,7 +175,7 @@ public class GridController : MonoBehaviour
 
             // Diagonal 2 (Top-Right to Bottom-Left)
             var firstDiag2 = GetStatus(0, columns - 1);
-            if (firstDiag2 != CellGrid.CurrentStatus.Empty)
+            if (firstDiag2 != CurrentStatus.Empty)
             {
                 bool win = true;
                 for (int i = 1; i < minDim; i++)
@@ -191,7 +199,7 @@ public class GridController : MonoBehaviour
         bool allFilled = true;
         foreach (var cell in cells_grids.Values)
         {
-            if (cell.Status == CellGrid.CurrentStatus.Empty)
+            if (cell.Status == CurrentStatus.Empty)
             {
                 allFilled = false;
                 break;
@@ -211,6 +219,9 @@ public class GridController : MonoBehaviour
     /// <summary>Cell ID convention from the GDD, e.g. row 1, col 2 -> "C12".</summary>
     public static string GetCellId(int row, int col) => $"C{row}{col}";
     
+    public ICell GetCell(int row, int col) =>
+        cells_grids.TryGetValue((row, col), out var cell) ? cell : null;
+
     public bool IsInBounds(int row, int col) => row >= 0 && row < rows && col >= 0 && col < columns;
 
 }

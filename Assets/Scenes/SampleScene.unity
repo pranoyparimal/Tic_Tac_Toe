@@ -244,7 +244,7 @@ MonoBehaviour:
   row: 2
   column: 0
   isInitialized: 1
-  status: 0
+  markLabel: {fileID: 0}
 --- !u!1001 &322850948
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -634,7 +634,7 @@ MonoBehaviour:
   row: 2
   column: 1
   isInitialized: 1
-  status: 0
+  markLabel: {fileID: 0}
 --- !u!1 &601164248 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6106740825881136601, guid: 9276a5288e9f6b24dbb89fd7bdc67319, type: 3}
@@ -660,7 +660,7 @@ MonoBehaviour:
   row: 1
   column: 0
   isInitialized: 1
-  status: 0
+  markLabel: {fileID: 0}
 --- !u!1 &701641278 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6106740825881136601, guid: 9276a5288e9f6b24dbb89fd7bdc67319, type: 3}
@@ -686,7 +686,7 @@ MonoBehaviour:
   row: 0
   column: 2
   isInitialized: 1
-  status: 0
+  markLabel: {fileID: 0}
 --- !u!1001 &711155933
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1543,7 +1543,7 @@ MonoBehaviour:
   row: 2
   column: 2
   isInitialized: 1
-  status: 0
+  markLabel: {fileID: 0}
 --- !u!224 &1631336950 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3285683672484683841, guid: 9276a5288e9f6b24dbb89fd7bdc67319, type: 3}
@@ -1560,6 +1560,7 @@ GameObject:
   - component: {fileID: 1652210129}
   - component: {fileID: 1652210131}
   - component: {fileID: 1652210130}
+  - component: {fileID: 1652210132}
   m_Layer: 0
   m_Name: GridHolder
   m_TagString: Untagged
@@ -1617,16 +1618,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GridController
   rows: 3
   columns: 3
-  cells_grids:
-  - {fileID: 1762066345}
-  - {fileID: 2015633593}
-  - {fileID: 701641283}
-  - {fileID: 601164253}
-  - {fileID: 1902210248}
-  - {fileID: 1796678319}
-  - {fileID: 219891961}
-  - {fileID: 459506639}
-  - {fileID: 1631336946}
+--- !u!114 &1652210132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1652210128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 686494996ef844a45ab94e2f68611e3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TurnManager
+  gridController: {fileID: 0}
+  randomizeMarks: 0
 --- !u!1 &1762066340 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6106740825881136601, guid: 9276a5288e9f6b24dbb89fd7bdc67319, type: 3}
@@ -1652,7 +1657,7 @@ MonoBehaviour:
   row: 0
   column: 0
   isInitialized: 1
-  status: 0
+  markLabel: {fileID: 0}
 --- !u!1 &1796678314 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6106740825881136601, guid: 9276a5288e9f6b24dbb89fd7bdc67319, type: 3}
@@ -1678,7 +1683,7 @@ MonoBehaviour:
   row: 1
   column: 2
   isInitialized: 1
-  status: 0
+  markLabel: {fileID: 0}
 --- !u!1 &1902210243 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6106740825881136601, guid: 9276a5288e9f6b24dbb89fd7bdc67319, type: 3}
@@ -1704,7 +1709,7 @@ MonoBehaviour:
   row: 1
   column: 1
   isInitialized: 1
-  status: 0
+  markLabel: {fileID: 0}
 --- !u!1 &2015633588 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6106740825881136601, guid: 9276a5288e9f6b24dbb89fd7bdc67319, type: 3}
@@ -1730,7 +1735,7 @@ MonoBehaviour:
   row: 0
   column: 1
   isInitialized: 1
-  status: 0
+  markLabel: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
