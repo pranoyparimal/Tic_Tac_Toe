@@ -49,7 +49,7 @@ public class TurnManager : MonoBehaviour
 
     private void HandleCellSelected(CellGrid cell)
     {
-        if (cell.status != CellGrid.CurrentStatus.Empty) return; // redundant safety net
+        if (cell.Status != CellGrid.CurrentStatus.Empty) return; // redundant safety net
 
         cell.SetMark(CurrentMark);
 

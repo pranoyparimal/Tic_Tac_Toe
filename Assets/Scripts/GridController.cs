@@ -18,11 +18,11 @@ public class GridController : MonoBehaviour
     public int Rows => rows;
     public int Columns => columns;
 
-    [SerializeField] private List<CellGrid> cells_grids = new();
+    private readonly Dictionary<(int, int), CellGrid> cells_grids = new();
 
     public bool IsGameOver { get; private set; }
 
-    private readonly Dictionary<string, GameObject> cellObjectsById = new();
+    //private readonly Dictionary<string, GameObject> cellObjectsById = new();
 
     /// <summary>Event Fired when a grid is selected on the board /// </summary>
     public event Action<CellGrid> OnCellSelected; // re-broadcast for TurnManager, ScoreTracker, etc.
@@ -47,7 +47,6 @@ public class GridController : MonoBehaviour
         rows = newRows;
         columns = newColumns;
         
-        cellObjectsById.Clear();
         cells_grids.Clear();
     }
 
@@ -55,12 +54,11 @@ public class GridController : MonoBehaviour
     public void RegisterCellObject(int row, int col, GameObject cellObject)
     {
         string id = GetCellId(row, col);
-        cellObjectsById[id] = cellObject;
 
         CellGrid grid = cellObject.GetComponent<CellGrid>();
         if (cellObject != null && grid != null)
         {
-            cells_grids.Add(grid);
+            cells_grids[(row, col)] = grid;
         }
         else 
         {
@@ -81,7 +79,7 @@ public class GridController : MonoBehaviour
     private void HandleCellClicked(CellGrid cell)
     {
         if (IsGameOver) return;
-        if (!cells_grids.Contains(cell)) return;
+        if (!cells_grids.ContainsValue(cell)) return;
 
         OnCellSelected?.Invoke(cell);
         CheckWinCondition();
@@ -89,28 +87,118 @@ public class GridController : MonoBehaviour
 
     public void CheckWinCondition()
     {
-        // 8 possible lines for a 3x3 — generalizable for NxN later if you want
-        int[][] lines = {
-            new[]{0,1,2}, new[]{3,4,5}, new[]{6,7,8}, // rows
-            new[]{0,3,6}, new[]{1,4,7}, new[]{2,5,8}, // cols
-            new[]{0,4,8}, new[]{2,4,6}                // diagonals
-        };
-
-        foreach (var line in lines)
+        CellGrid.CurrentStatus GetStatus(int r, int c)
         {
-            var a = cells_grids[line[0]].status;
-            var b = cells_grids[line[1]].status;
-            var c = cells_grids[line[2]].status;
+            if (cells_grids.TryGetValue((r, c), out var cell))
+                return cell.Status;
+            return CellGrid.CurrentStatus.Empty;
+        }
 
-            if (a != CellGrid.CurrentStatus.Empty && a == b && b == c)
+        // Check rows
+        for (int r = 0; r < rows; r++)
+        {
+            var first = GetStatus(r, 0);
+            if (first == CellGrid.CurrentStatus.Empty) continue;
+
+            bool win = true;
+            for (int c = 1; c < columns; c++)
+            {
+                if (GetStatus(r, c) != first)
+                {
+                    win = false;
+                    break;
+                }
+            }
+            if (win)
             {
                 IsGameOver = true;
-                OnGameWon?.Invoke(a);
+                OnGameWon?.Invoke(first);
                 return;
             }
         }
 
-        if (cells_grids.TrueForAll(cell => cell.status != CellGrid.CurrentStatus.Empty))
+        // Check columns
+        for (int c = 0; c < columns; c++)
+        {
+            var first = GetStatus(0, c);
+            if (first == CellGrid.CurrentStatus.Empty) continue;
+
+            bool win = true;
+            for (int r = 1; r < rows; r++)
+            {
+                if (GetStatus(r, c) != first)
+                {
+                    win = false;
+                    break;
+                }
+            }
+            if (win)
+            {
+                IsGameOver = true;
+                OnGameWon?.Invoke(first);
+                return;
+            }
+        }
+
+        // Check diagonals
+        int minDim = Mathf.Min(rows, columns);
+        if (minDim > 1)
+        {
+            // Diagonal 1 (Top-Left to Bottom-Right)
+            var firstDiag1 = GetStatus(0, 0);
+            if (firstDiag1 != CellGrid.CurrentStatus.Empty)
+            {
+                bool win = true;
+                for (int i = 1; i < minDim; i++)
+                {
+                    if (GetStatus(i, i) != firstDiag1)
+                    {
+                        win = false;
+                        break;
+                    }
+                }
+                if (win)
+                {
+                    IsGameOver = true;
+                    OnGameWon?.Invoke(firstDiag1);
+                    return;
+                }
+            }
+
+            // Diagonal 2 (Top-Right to Bottom-Left)
+            var firstDiag2 = GetStatus(0, columns - 1);
+            if (firstDiag2 != CellGrid.CurrentStatus.Empty)
+            {
+                bool win = true;
+                for (int i = 1; i < minDim; i++)
+                {
+                    if (GetStatus(i, columns - 1 - i) != firstDiag2)
+                    {
+                        win = false;
+                        break;
+                    }
+                }
+                if (win)
+                {
+                    IsGameOver = true;
+                    OnGameWon?.Invoke(firstDiag2);
+                    return;
+                }
+            }
+        }
+
+        // Check for draw (if all cells are filled)
+        bool allFilled = true;
+        foreach (var cell in cells_grids.Values)
+        {
+            if (cell.Status == CellGrid.CurrentStatus.Empty)
+            {
+                allFilled = false;
+                break;
+            }
+        }
+        
+        if (allFilled && cells_grids.Count > 0)
         {
             IsGameOver = true;
             OnGameDraw?.Invoke();
@@ -122,11 +210,7 @@ public class GridController : MonoBehaviour
 
     /// <summary>Cell ID convention from the GDD, e.g. row 1, col 2 -> "C12".</summary>
     public static string GetCellId(int row, int col) => $"C{row}{col}";
-
-    public GameObject GetCellObject(int row, int col) =>
-        cellObjectsById.TryGetValue(GetCellId(row, col), out var obj) ? obj : null;
     
-
     public bool IsInBounds(int row, int col) => row >= 0 && row < rows && col >= 0 && col < columns;
 
 }

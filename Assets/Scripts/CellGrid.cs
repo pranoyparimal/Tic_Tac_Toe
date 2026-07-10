@@ -19,7 +19,8 @@ public class CellGrid : MonoBehaviour
         O,
         X
     }
-    public CurrentStatus status;
+    private CurrentStatus status = CurrentStatus.Empty;
+    public CurrentStatus Status => status;
 
     public int Row
     {
