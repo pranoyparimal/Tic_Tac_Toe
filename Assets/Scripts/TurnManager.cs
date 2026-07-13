@@ -35,7 +35,7 @@ public class TurnManager : MonoBehaviour
         players[1] = gameObject.AddComponent<AIPlayer>(); 
 
         TurnManagerEvents.OnMarkPlaced += gridController.HandleMarkPlaced;
-        GridControllerEvents.OnGameOver += HandleOnGameOver;
+        GridControllerEvents.OnGameReset += HandleOnGameReset;
     }
 
 
@@ -45,7 +45,7 @@ public class TurnManager : MonoBehaviour
     private void OnDestroy()
     {
         TurnManagerEvents.OnMarkPlaced -= gridController.HandleMarkPlaced;
-        GridControllerEvents.OnGameOver -= HandleOnGameOver;
+        GridControllerEvents.OnGameReset -= HandleOnGameReset;
     }
 
     private void Start() => StartNewGame();
@@ -77,9 +77,10 @@ public class TurnManager : MonoBehaviour
         players[0].StartTurn();
     }
 
-    private void HandleOnGameOver()
+    private void HandleOnGameReset()
     {
         Debug.Log($"A new game started.");
+        GridControllerEvents.RaiseOnGridReset();
         StartNewGame();
     }
     private void HandleCellSelected(int row, int col)

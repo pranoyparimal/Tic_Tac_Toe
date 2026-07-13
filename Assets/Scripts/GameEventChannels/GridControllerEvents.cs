@@ -18,8 +18,8 @@ public static class GridControllerEvents
     public static void RaiseOnGridReset() => OnGridReset?.Invoke ();
 
     /// <summary> Invoked by GridController when the game over, to Start a new game or etc. /// </summary>
-    public static event Action OnGameOver;
-    public static void RaiseOnGameOver() => OnGameOver?.Invoke ();
+    public static event Action OnGameReset;
+    public static void RaiseOnGameReset() => OnGameReset?.Invoke ();
 
 
     // Handy for domain-reload safety in the editor (script recompiles, etc.)
@@ -28,7 +28,7 @@ public static class GridControllerEvents
         OnCellSelected = null;
         OnGameWon = null;
         OnGameDraw = null;
-        OnGameOver = null;
+        OnGameReset = null;
         OnGridReset = null;
     }
 

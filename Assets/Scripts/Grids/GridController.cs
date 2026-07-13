@@ -43,6 +43,13 @@ public class GridController : MonoBehaviour
         {
             cells_grids[(cell.Row, cell.Column)] = cell;
         }
+
+        GridControllerEvents.OnGridReset += ResetGameState;
+    }
+
+    private void OnDestroy()
+    {
+        GridControllerEvents.OnGridReset -= ResetGameState;
     }
 
     /// <summary>
@@ -220,7 +227,14 @@ public class GridController : MonoBehaviour
     }
 
     /// <summary>Call from a restart button/flow to unlock the board for a new game.</summary>
-    public void ResetGameState() => IsGameOver = false;
+    public void ResetGameState()
+    {
+        IsGameOver = false;
+        foreach (var cell in cells_grids.Values)
+        {
+            cell.SetMark(CurrentStatus.Empty);
+        }
+    }
 
     /// <summary>Cell ID convention from the GDD, e.g. row 1, col 2 -> "C12".</summary>
     public static string GetCellId(int row, int col) => $"C{row}{col}";
