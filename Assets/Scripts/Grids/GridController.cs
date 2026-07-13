@@ -22,6 +22,19 @@ public class GridController : MonoBehaviour
 
     public bool IsGameOver { get; private set; }
 
+
+    //private readonly Dictionary<string, GameObject> cellObjectsById = new();
+
+    /*/// <summary>Event Fired when a grid is selected on the board /// </summary>
+    public event Action<ICell> OnCellSelected; // re-broadcast for TurnManager, ScoreTracker, etc.
+    /// <summary>Event Fired when a player wins the game  /// </summary>
+     public event Action<CurrentStatus> OnGameWon;
+     /// <summary>Event fired when the game is drawn & no player wins the game  /// </summary>
+     public event Action OnGameDraw;
+
+     /// <summary>Fired when the grid is cleared back to all-Empty (restart flow).</summary>
+     public event Action OnGridReset;*/
+
     private void Awake()
     {
         // Rebuild dictionary for runtime since Dictionary doesn't serialize
@@ -31,19 +44,6 @@ public class GridController : MonoBehaviour
             cells_grids[(cell.Row, cell.Column)] = cell;
         }
     }
-
-    //private readonly Dictionary<string, GameObject> cellObjectsById = new();
-
-    /// <summary>Event Fired when a grid is selected on the board /// </summary>
-    public event Action<ICell> OnCellSelected; // re-broadcast for TurnManager, ScoreTracker, etc.
-    /// <summary>Event Fired when a player wins the game  /// </summary>
-    public event Action<CurrentStatus> OnGameWon;
-    /// <summary>Event fired when the game is drawn & no player wins the game  /// </summary>
-    public event Action OnGameDraw;
-
-    /// <summary>Fired when the grid is cleared back to all-Empty (restart flow).</summary>
-    public event Action OnGridReset;
-
 
     /// <summary>
     /// Allocates fresh cell data for an NxN (or NxM) grid. Call this once
@@ -89,7 +89,8 @@ public class GridController : MonoBehaviour
         if (!cells_grids.TryGetValue((row, col), out var cell)) return;
 
         cell.SetMark(mark);
-        OnCellSelected?.Invoke(cell);
+        GridControllerEvents.RaiseOnCellSelected(cell);
+        //OnCellSelected?.Invoke(cell);
         CheckWinCondition();
     }
 
@@ -120,7 +121,8 @@ public class GridController : MonoBehaviour
             if (win)
             {
                 IsGameOver = true;
-                OnGameWon?.Invoke(first);
+                GridControllerEvents.RaiseOnGameWon(first);
+                //OnGameWon?.Invoke(first);
                 return;
             }
         }
@@ -143,7 +145,8 @@ public class GridController : MonoBehaviour
             if (win)
             {
                 IsGameOver = true;
-                OnGameWon?.Invoke(first);
+                GridControllerEvents.RaiseOnGameWon(first);
+                //OnGameWon?.Invoke(first);
                 return;
             }
         }
@@ -168,7 +171,8 @@ public class GridController : MonoBehaviour
                 if (win)
                 {
                     IsGameOver = true;
-                    OnGameWon?.Invoke(firstDiag1);
+                    GridControllerEvents.RaiseOnGameWon(firstDiag1);
+                    //OnGameWon?.Invoke(firstDiag1);
                     return;
                 }
             }
@@ -189,7 +193,8 @@ public class GridController : MonoBehaviour
                 if (win)
                 {
                     IsGameOver = true;
-                    OnGameWon?.Invoke(firstDiag2);
+                    GridControllerEvents.RaiseOnGameWon(firstDiag2);
+                    //OnGameWon?.Invoke(firstDiag2);
                     return;
                 }
             }
@@ -209,7 +214,8 @@ public class GridController : MonoBehaviour
         if (allFilled && cells_grids.Count > 0)
         {
             IsGameOver = true;
-            OnGameDraw?.Invoke();
+            GridControllerEvents.RaiseOnGameDraw();
+            //OnGameDraw?.Invoke();
         }
     }
 
