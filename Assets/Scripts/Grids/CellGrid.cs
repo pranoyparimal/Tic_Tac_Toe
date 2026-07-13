@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Button))]
-public class CellGrid : MonoBehaviour
+public class CellGrid : MonoBehaviour, ICell
 {
     [SerializeField] private int row;
     [SerializeField] private int column;
@@ -13,13 +13,9 @@ public class CellGrid : MonoBehaviour
 
     [SerializeField] private TMP_Text markLabel; // assign in prefab, or auto-found below
 
-    public enum CurrentStatus
-    {
-        Empty,
-        O,
-        X
-    }
-    public CurrentStatus status;
+
+    private CurrentStatus status = CurrentStatus.Empty;
+    public CurrentStatus Status => status;
 
     public int Row
     {
@@ -57,7 +53,7 @@ public class CellGrid : MonoBehaviour
     {
         if (status != CurrentStatus.Empty) return;
         Debug.Log($"The Grid is selcted: <color=yellow> ({this.row}, {this.column})</color>");
-        GridEvents.RaiseCellClicked(this);
+        GridEvents.RaiseCellClickedUI(this.row, this.column);
     }
 
     /// <summary>Called externally (by TurnManager) once a move is accepted.</summary>

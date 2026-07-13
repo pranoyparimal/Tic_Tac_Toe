@@ -133,11 +133,12 @@ public class Grid_Creator : MonoBehaviour
             {
                 GameObject cell = InstantiateCell(r, c);
 
-                if (cell.GetComponent<CellGrid>() == null)
+                ICell _grid = cell.GetComponent<ICell>();
+                if (_grid == null)
                 {
-                    CellGrid _grid = cell.AddComponent<CellGrid>();
-                    _grid.Initialize(r, c);
+                    _grid = cell.AddComponent<CellGrid>();
                 }
+                _grid.Initialize(r, c);
 
                 RectTransform rt = cell.GetComponent<RectTransform>();
                 rt.localRotation = Quaternion.identity;
