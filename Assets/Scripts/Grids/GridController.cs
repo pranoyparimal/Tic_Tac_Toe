@@ -44,12 +44,13 @@ public class GridController : MonoBehaviour
             cells_grids[(cell.Row, cell.Column)] = cell;
         }
 
-        GridControllerEvents.OnGridReset += ResetGameState;
+        TurnManagerEvents.OnMarkPlaced += HandleMarkPlaced;
+        WinningPanelInteractionEvents.OnGameRestarted += ResetGameState;
     }
 
     private void OnDestroy()
     {
-        GridControllerEvents.OnGridReset -= ResetGameState;
+        WinningPanelInteractionEvents.OnGameRestarted -= ResetGameState;
     }
 
     /// <summary>

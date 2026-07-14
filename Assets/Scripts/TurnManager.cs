@@ -32,10 +32,9 @@ public class TurnManager : MonoBehaviour
         // Default to two human players if none are assigned.
         // In a real game, these might be configured via UI.
         players[0] = gameObject.AddComponent<HumanPlayer>();
-        players[1] = gameObject.AddComponent<AIPlayer>(); 
+        players[1] = gameObject.AddComponent<AIPlayer>();
 
-        TurnManagerEvents.OnMarkPlaced += gridController.HandleMarkPlaced;
-        GridControllerEvents.OnGameReset += HandleOnGameReset;
+        WinningPanelInteractionEvents.OnGameRestarted += HandleOnGameReset;
     }
 
 
@@ -44,8 +43,7 @@ public class TurnManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        TurnManagerEvents.OnMarkPlaced -= gridController.HandleMarkPlaced;
-        GridControllerEvents.OnGameReset -= HandleOnGameReset;
+        WinningPanelInteractionEvents.OnGameRestarted -= HandleOnGameReset;
     }
 
     private void Start() => StartNewGame();
@@ -63,15 +61,11 @@ public class TurnManager : MonoBehaviour
         players[1].Initialize(PlayerId.Player2, player2Mark);
 
         TurnManagerEvents.RaiseOnPlayerAssigned(PlayerId.Player1, player1Mark);
-        //OnPlayerAssigned?.Invoke(PlayerId.Player1, player1Mark);
 
         TurnManagerEvents.RaiseOnPlayerAssigned(PlayerId.Player2, player2Mark);
-        //OnPlayerAssigned?.Invoke(PlayerId.Player2, player2Mark);
 
         TurnManagerEvents.RaiseOnTurnChanged(CurrentPlayer);
-        //OnTurnChanged?.Invoke(CurrentPlayer);
 
-        gridController.ResetGameState();
 
         // Start the first turn
         players[0].StartTurn();
@@ -80,7 +74,7 @@ public class TurnManager : MonoBehaviour
     private void HandleOnGameReset()
     {
         Debug.Log($"A new game started.");
-        GridControllerEvents.RaiseOnGridReset();
+        //GridControllerEvents.RaiseOnGridReset();
         StartNewGame();
     }
     private void HandleCellSelected(int row, int col)
@@ -96,7 +90,6 @@ public class TurnManager : MonoBehaviour
 
         CurrentPlayer = CurrentPlayer == PlayerId.Player1 ? PlayerId.Player2 : PlayerId.Player1;
         TurnManagerEvents.RaiseOnTurnChanged(CurrentPlayer);
-        //OnTurnChanged?.Invoke(CurrentPlayer);
 
         // Start next player's turn
         int nextPlayerIndex = CurrentPlayer == PlayerId.Player1 ? 0 : 1;

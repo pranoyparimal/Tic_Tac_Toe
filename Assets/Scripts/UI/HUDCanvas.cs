@@ -17,12 +17,8 @@ public class HUDCanvas : MonoBehaviour
         GridControllerEvents.OnCellSelected += HandleOnCellSelected;
         GridControllerEvents.OnGameWon += HandleGameWon;
         GridControllerEvents.OnGameDraw += HandleOnGameDraw;
-        GridControllerEvents.OnGameReset += HandleOnGameReset;
-    }
 
-    private void HandleOnGameReset()
-    {
-        hudCanvas.enabled = false;
+        WinningPanelInteractionEvents.OnGameRestarted += ResetCanvas;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -50,7 +46,13 @@ public class HUDCanvas : MonoBehaviour
         GridControllerEvents.OnCellSelected -= HandleOnCellSelected;
         GridControllerEvents.OnGameWon -= HandleGameWon;
         GridControllerEvents.OnGameDraw -= HandleOnGameDraw;
-        GridControllerEvents.OnGameReset -= HandleOnGameReset;
+
+        WinningPanelInteractionEvents.OnGameRestarted -= ResetCanvas;
+    }
+
+    private void ResetCanvas()
+    {
+        hudCanvas.enabled = false;
     }
 
     private IEnumerator DelayBeforeGameOverAfterWin(CurrentStatus _status)

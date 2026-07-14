@@ -19,7 +19,7 @@ public class WinningPanel : MonoBehaviour
     private void OnRestartBtnClicked()
     {
         //Debug.Log("On Restart Btn Clicked Functionality yet to be implemented.");
-        GridControllerEvents.RaiseOnGameReset();
+        WinningPanelInteractionEvents.RaiseOnGameRestarted();
     }
 
     public void ShowWinningStatus(CurrentStatus _status)
