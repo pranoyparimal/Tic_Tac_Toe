@@ -13,6 +13,11 @@ public static class GridControllerEvents
     public static event Action OnGameDraw;
     public static void RaiseOnGameDraw() => OnGameDraw?.Invoke ();
 
+    /// <summary>  Event fired when specific grids are highlighted as part of a winning condition.  /// </summary>  
+    public static event Action<ICell[]> OnWinningGridsAvailable;
+    /// <summary> Raises the OnWinningGridsHighlighted event to notify listeners about the highlighted winning grids.  /// </summary>
+    public static void RaiseOnWinningGridsAvailable(ICell[] cells) => OnWinningGridsAvailable?.Invoke(cells);
+
     /// <summary>Fired when the grid is cleared back to all-Empty (restart flow).</summary>
     public static event Action OnGridReset;
     public static void RaiseOnGridReset() => OnGridReset?.Invoke ();
@@ -28,6 +33,7 @@ public static class GridControllerEvents
         OnCellSelected = null;
         OnGameWon = null;
         OnGameDraw = null;
+        OnWinningGridsAvailable = null;
         OnGameReset = null;
         OnGridReset = null;
     }

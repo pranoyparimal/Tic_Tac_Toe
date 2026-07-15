@@ -5,4 +5,6 @@ public interface ICell
     CurrentStatus Status { get; }
     void Initialize(int row, int col);
     void SetMark(CurrentStatus mark);
+    void HighLight();
+    void NormalizeCell();
 }

@@ -21,6 +21,7 @@ public class GridController : MonoBehaviour
     private readonly Dictionary<(int, int), ICell> cells_grids = new();
 
     public bool IsGameOver { get; private set; }
+    private ICell[] WinningCells { get; set; }
 
 
     //private readonly Dictionary<string, GameObject> cellObjectsById = new();
@@ -81,16 +82,6 @@ public class GridController : MonoBehaviour
         }
     }
 
-   /* private void HandleCellClicked(CellGrid grid)
-    {
-        // safety: ignore clicks from cells that aren't part of *this* grid instance
-        if (!cells_grids.Contains(grid)) return;
-
-        Debug.Log($"The Grid is selcted: <color=red> ({grid.Row}, {grid.Column})</color>");
-        OnCellSelected?.Invoke(grid);
-        CheckWinLogic(grid);
-    }*/
-
     public void HandleMarkPlaced(int row, int col, CurrentStatus mark)
     {
         if (IsGameOver) return;
@@ -102,7 +93,7 @@ public class GridController : MonoBehaviour
         CheckWinCondition();
     }
 
-    public void CheckWinCondition()
+    private void CheckWinCondition()
     {
         CurrentStatus GetStatus(int r, int c)
         {
@@ -110,6 +101,7 @@ public class GridController : MonoBehaviour
                 return cell.Status;
             return CurrentStatus.Empty;
         }
+
 
         // Check rows
         for (int r = 0; r < rows; r++)
@@ -128,9 +120,12 @@ public class GridController : MonoBehaviour
             }
             if (win)
             {
+                WinningCells = new ICell[columns];
+                for (int i = 0; i < columns; i++) WinningCells[i] = GetCell(r, i);
                 IsGameOver = true;
+                GridControllerEvents.RaiseOnWinningGridsAvailable(WinningCells);
+                //HighLightWinningCells(WinningCells);
                 GridControllerEvents.RaiseOnGameWon(first);
-                //OnGameWon?.Invoke(first);
                 return;
             }
         }
@@ -152,9 +147,12 @@ public class GridController : MonoBehaviour
             }
             if (win)
             {
+                WinningCells = new ICell[rows];
+                for (int i = 0; i < rows; i++) WinningCells[i] = GetCell(i, c);
                 IsGameOver = true;
+                GridControllerEvents.RaiseOnWinningGridsAvailable(WinningCells);
+                //HighLightWinningCells(WinningCells);
                 GridControllerEvents.RaiseOnGameWon(first);
-                //OnGameWon?.Invoke(first);
                 return;
             }
         }
@@ -178,9 +176,12 @@ public class GridController : MonoBehaviour
                 }
                 if (win)
                 {
+                    WinningCells = new ICell[minDim];
+                    for (int i = 0; i < minDim; i++) WinningCells[i] = GetCell(i, i);
                     IsGameOver = true;
+                    GridControllerEvents.RaiseOnWinningGridsAvailable(WinningCells);
+                    //HighLightWinningCells(WinningCells);
                     GridControllerEvents.RaiseOnGameWon(firstDiag1);
-                    //OnGameWon?.Invoke(firstDiag1);
                     return;
                 }
             }
@@ -200,9 +201,12 @@ public class GridController : MonoBehaviour
                 }
                 if (win)
                 {
+                    WinningCells = new ICell[minDim];
+                    for (int i = 0; i < minDim; i++) WinningCells[i] = GetCell(i, columns - 1 - i);
                     IsGameOver = true;
+                    GridControllerEvents.RaiseOnWinningGridsAvailable(WinningCells);
+                    //HighLightWinningCells(WinningCells);
                     GridControllerEvents.RaiseOnGameWon(firstDiag2);
-                    //OnGameWon?.Invoke(firstDiag2);
                     return;
                 }
             }
@@ -223,7 +227,6 @@ public class GridController : MonoBehaviour
         {
             IsGameOver = true;
             GridControllerEvents.RaiseOnGameDraw();
-            //OnGameDraw?.Invoke();
         }
     }
 
@@ -231,9 +234,11 @@ public class GridController : MonoBehaviour
     public void ResetGameState()
     {
         IsGameOver = false;
+        WinningCells = null;
         foreach (var cell in cells_grids.Values)
         {
             cell.SetMark(CurrentStatus.Empty);
+            //cell.NormalizeCell();
         }
     }
 

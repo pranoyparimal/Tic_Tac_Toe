@@ -71,4 +71,24 @@ public class CellGrid : MonoBehaviour, ICell
     {
        GetComponent<Button>().onClick?.RemoveListener(OnGridSelected);
     }
+
+    public void HighLight()
+    {
+        Color _color = new Color(0.541f, 0.168f, 0.886f); // Approximate blueViolet
+        var button = this.GetComponent<Button>();
+        var colors = button.colors;
+        colors.normalColor = _color;
+        colors.selectedColor = _color;
+        button.colors = colors;
+    }
+
+    public void NormalizeCell()
+    {
+        Color _color = new Color(1.0f, 1.0f, 1.0f); // Approximate White
+        var button = this.GetComponent<Button>();
+        var colors = button.colors;
+        colors.normalColor = _color;
+        colors.selectedColor = _color;
+        button.colors = colors;
+    }
 }

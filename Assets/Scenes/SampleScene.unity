@@ -1732,6 +1732,42 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4412619443373701475, guid: 9276a5288e9f6b24dbb89fd7bdc67319, type: 3}
+      propertyPath: m_Colors.m_PressedColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4412619443373701475, guid: 9276a5288e9f6b24dbb89fd7bdc67319, type: 3}
+      propertyPath: m_Colors.m_PressedColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4412619443373701475, guid: 9276a5288e9f6b24dbb89fd7bdc67319, type: 3}
+      propertyPath: m_Colors.m_PressedColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4412619443373701475, guid: 9276a5288e9f6b24dbb89fd7bdc67319, type: 3}
+      propertyPath: m_Colors.m_SelectedColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4412619443373701475, guid: 9276a5288e9f6b24dbb89fd7bdc67319, type: 3}
+      propertyPath: m_Colors.m_SelectedColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4412619443373701475, guid: 9276a5288e9f6b24dbb89fd7bdc67319, type: 3}
+      propertyPath: m_Colors.m_SelectedColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4412619443373701475, guid: 9276a5288e9f6b24dbb89fd7bdc67319, type: 3}
+      propertyPath: m_Colors.m_HighlightedColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4412619443373701475, guid: 9276a5288e9f6b24dbb89fd7bdc67319, type: 3}
+      propertyPath: m_Colors.m_HighlightedColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4412619443373701475, guid: 9276a5288e9f6b24dbb89fd7bdc67319, type: 3}
+      propertyPath: m_Colors.m_HighlightedColor.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6106740825881136601, guid: 9276a5288e9f6b24dbb89fd7bdc67319, type: 3}
       propertyPath: m_Name
       value: Cell_0_0
@@ -2318,6 +2354,7 @@ GameObject:
   - component: {fileID: 1652210131}
   - component: {fileID: 1652210130}
   - component: {fileID: 1652210132}
+  - component: {fileID: 1652210133}
   m_Layer: 0
   m_Name: GridHolder
   m_TagString: Untagged
@@ -2389,6 +2426,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TurnManager
   gridController: {fileID: 0}
   randomizeMarks: 0
+--- !u!114 &1652210133
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1652210128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b44ef562f5854343bfab9a46d576345, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridVisualEffectsManager
 --- !u!1 &1762066340 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6106740825881136601, guid: 9276a5288e9f6b24dbb89fd7bdc67319, type: 3}
