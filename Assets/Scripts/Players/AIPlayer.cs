@@ -24,7 +24,7 @@ public class AIPlayer : MonoBehaviour, IPlayer
     private IEnumerator TakeTurnRoutine()
     {
         // Simulate thinking delay
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1.0f);
 
         if (gridController == null)
             yield break;

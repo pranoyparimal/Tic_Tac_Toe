@@ -50,7 +50,7 @@ public class TurnManager : MonoBehaviour
 
     public void StartNewGame()
     {
-        bool player1IsO = !randomizeMarks || UnityEngine.Random.value < 0.5f;
+        bool player1IsO = UnityEngine.Random.value < 0.5f;
 
         player1Mark = player1IsO ? CurrentStatus.O : CurrentStatus.X;
         player2Mark = player1IsO ? CurrentStatus.X : CurrentStatus.O;
@@ -64,7 +64,7 @@ public class TurnManager : MonoBehaviour
 
         TurnManagerEvents.RaiseOnPlayerAssigned(PlayerId.Player2, player2Mark);
 
-        TurnManagerEvents.RaiseOnTurnChanged(CurrentPlayer);
+        TurnManagerEvents.RaiseOnTurnChanged(CurrentPlayer, player1Mark, false);
 
 
         // Start the first turn
@@ -89,7 +89,8 @@ public class TurnManager : MonoBehaviour
         if (gridController.IsGameOver) return;
 
         CurrentPlayer = CurrentPlayer == PlayerId.Player1 ? PlayerId.Player2 : PlayerId.Player1;
-        TurnManagerEvents.RaiseOnTurnChanged(CurrentPlayer);
+        CurrentStatus status = CurrentPlayer == PlayerId.Player1 ? player2Mark : player1Mark;
+        TurnManagerEvents.RaiseOnTurnChanged(CurrentPlayer, status, true);
 
         // Start next player's turn
         int nextPlayerIndex = CurrentPlayer == PlayerId.Player1 ? 0 : 1;
